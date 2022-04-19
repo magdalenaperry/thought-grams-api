@@ -8,13 +8,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
     match: [/.+@.+\..+/, 'Must match an email address'],
-    trim: true,
+    
   },
   thoughts: [{
     type: Schema.Types.ObjectId,
@@ -28,4 +29,22 @@ const userSchema = new Schema({
   },
 ],
 },
-)
+{
+  // allow virtuals to be used
+  toJSON: {
+    virtuals: true,
+  },
+  id: false,
+}
+);
+
+// TODO: create a virtual that retrieves the length of a user's friends array field on query.
+// Create a virtual called `friendCount`
+// that retrieves the length of the user 's `friends` array field on query.
+userSchema.virtual('friendCount').get(function () {
+  return this.friends.length;
+});
+
+const User = model('user', userSchema);
+
+module.exports = User;

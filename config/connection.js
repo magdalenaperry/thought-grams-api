@@ -3,7 +3,8 @@ const {
   connection
 } = require('mongoose');
 
-connect('mongodb://localhost/usersPosts', {
+// creates database or uses database if already existing 
+connect('mongodb://localhost/thought-grams', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
