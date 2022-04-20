@@ -35,7 +35,7 @@ module.exports = {
   },
 
 
-  // Update a user
+  // Update a 
   updateUser(req, res) {
     User.findOneAndUpdate({
         _id: req.params._id
