@@ -79,6 +79,24 @@ module.exports = {
       });
   },
 
+    // Update a Thought successful!
+    updateThought(req, res) {
+      Thought.findOneAndUpdate({ _id: req.params._id }, 
+        { $set: req.body }, 
+        { runValidators: true, new: true })
+        .then((thoughtData) =>
+          !thoughtData ?
+          res.status(404).json({
+            message: 'No user with this id!'
+          }) :
+          res.json(thoughtData)
+        )
+        .catch((err) => res.status(500).json(err));
+    },
+
+
+
+
   createReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
