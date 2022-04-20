@@ -1,13 +1,14 @@
 const {
   Schema,
-  model, 
+  model,
   Types
 } = require('mongoose');
 
+const timeFormat = require('../utils/timeformat');
+
 const User = require('./user')
 
-const reactionSchema = new Schema(
-  {
+const reactionSchema = new Schema({
   reactionId: {
     type: Schema.Types.ObjectId,
     default: () => new Types.ObjectId(),
@@ -25,9 +26,16 @@ const reactionSchema = new Schema(
   createdAt: {
     type: Date,
     default: Date.now,
-    // format
-  }
+    // not good practice, keep ISO string so that you can manipulate it
+    get: timestamp => timeFormat(timestamp)
+  },
+}, {
+  toJSON: {
+    getters: true,
+  },
+  id: false,
 });
+
 
 const thoughtSchema = new Schema({
   thoughtText: {
@@ -38,7 +46,8 @@ const thoughtSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    // get method
+    // not good practice, keep ISO string so that you can manipulate it
+    get: timestamp => timeFormat(timestamp)
   },
   username: [{
     type: String,
@@ -46,7 +55,6 @@ const thoughtSchema = new Schema({
   }, ],
   reactions: [reactionSchema],
 }, {
-  // allow virtuals to be used
   toJSON: {
     virtuals: true,
     getters: true,
@@ -54,7 +62,6 @@ const thoughtSchema = new Schema({
   id: false,
 });
 
-// TODO: create a virtual that retrieves the length of a thoughts reactions field on query.
 thoughtSchema.virtual('reactionCount').get(function () {
   return this.reactions.length;
 });

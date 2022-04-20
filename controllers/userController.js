@@ -68,38 +68,11 @@ module.exports = {
       });
   },
 
-// create a friend
-  createFriend({
-    params
-  }, res) {
-    User.findOneAndUpdate({
-        userId: params.userId
-      }, {
-        $push: {
-          friends: params.friendId
-        }
-      }, {
-        new: true
-      })
-      .then(dbUserData => {
-        if (!dbUserData) {
-          res.status(404).json({
-            message: 'No user found at this id!'
-          });
-          return;
-        }
-        res.json(dbUserData)
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(400).json(err);
-      });
-  },
-
-// delete a friend
-  deleteFriend({params}, res) {
-    User.findOneAndRemove(
-      { userId: params.userId},
+// create a friend successful!
+  createFriend({params}, res) {
+    User.findOneAndUpdate(
+      { _id: params.userId }, 
+      { $push: { friends: params.friendId } }, 
       { new: true })
       .then(dbUserData => {
         if (!dbUserData) {
@@ -116,8 +89,24 @@ module.exports = {
       });
   },
 
-
-
-
-
+// delete a friend SUCCESSFUL!
+  deleteFriend({params}, res) {
+    User.findOneAndUpdate(
+      { _id: params.userId},
+      { $pull: { friends: params.friendId } },
+      { new: true })
+      .then(userData => {
+        if (!userData) {
+          res.status(404).json({
+            message: 'No user found at this id!'
+          });
+          return;
+        }
+        res.json(userData)
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  },
 }

@@ -59,11 +59,8 @@ module.exports = {
         console.log(req.body);
         return User.findOneAndUpdate({
           _id: req.body.userId
-        }, {
-          $push: {
-            thoughts: thought._id
-          }
-        }, {
+        }, 
+        { $push: { thoughts: thought._id } }, {
           new: true
         });
       })
@@ -86,7 +83,8 @@ module.exports = {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
             { $push: { reactions: body } },
-            { new: true, runValidators: true }
+            { new: true, 
+              runValidators: true }
         )
             .then(dbThoughtsData => {
                 if (!dbThoughtsData) {
@@ -102,21 +100,22 @@ module.exports = {
             });
     },
 
-    // reaction Id delete
+    // reaction Id!
     deleteReaction({ params }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
             { $pull: { reactions: { reactionId: params.reactionId } } },
-            { new: true }
+            { new: true, runValidators: true }
         )
-            .then(reactions => {
-                if (reactions) {
+            .then(thoughtsData => {
+              // console.log(thoughtsData)
+                if (!thoughtsData) {
                     res.status(404)
                     .json(
                       { message: 'No thoughts found at this id!' });
                     return;
                 }
-                res.json(reactions);
+                res.json(thoughtsData);
             })
             .catch(err => {
                 console.log(err);
