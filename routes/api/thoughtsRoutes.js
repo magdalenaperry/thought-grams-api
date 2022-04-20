@@ -3,28 +3,25 @@ const {
   getSingleThought,
   getThoughts,
   createThought,
+  deleteThought,
+  createReaction,
+  deleteReaction
 } = require('../../controllers/thoughtController');
+
+const { create } = require('../../models/user');
 
 router.route('/')
 .get(getThoughts)
 .post(createThought);
 
-router.route('/:postId')
-.get(getSingleThought);
+router.route('/:_id')
+.get(getSingleThought)
+.delete(deleteThought);
+
+router.route(`/:thoughtId/reactions`)
+.post(createReaction)
+
+router.route('/:thoughtId/reactions/:reactionId')
+.delete(deleteReaction)
 
 module.exports = router;
-
-//  createThought({ body }, res) {
-//         Thought.create(
-//           { thoughtText: body.thoughtText,
-//             username: body.username }
-//           )
-//         .then((
-//           {_id}) => User.findOneAndUpdate(
-//             { _id: body.userId}, 
-//             { $push: { thoughts: _id } }, 
-//             { new: true }))
-
-//         .then(dbThoughtData => res.json(dbThoughtData))
-//         .catch(err => res.status(400).json(err))
-//     },

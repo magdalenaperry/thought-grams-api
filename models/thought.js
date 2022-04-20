@@ -1,6 +1,7 @@
 const {
   Schema,
-  model
+  model, 
+  Types
 } = require('mongoose');
 
 const User = require('./user')
@@ -14,6 +15,7 @@ const reactionSchema = new Schema(
   reactionBody: {
     type: String,
     required: true,
+    minlength: 1,
     maxlength: 280
   },
   username: {
@@ -22,8 +24,8 @@ const reactionSchema = new Schema(
   },
   createdAt: {
     type: Date,
-    default: Date.now
-    // get method format time?
+    default: Date.now,
+    // format
   }
 });
 

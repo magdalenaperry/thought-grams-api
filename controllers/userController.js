@@ -33,7 +33,7 @@ module.exports = {
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => res.status(500).json(err));
   },
-  
+
   // Delete a student and remove them from the course
   deleteUser(req, res) {
     User.findOneAndRemove({
@@ -63,7 +63,61 @@ module.exports = {
       )
       .catch((err) => {
         console.log(err);
-        res.status(500).json(err);
+        res.status(500)
+          .json(err);
       });
-  }
+  },
+
+// create a friend
+  createFriend({
+    params
+  }, res) {
+    User.findOneAndUpdate({
+        userId: params.userId
+      }, {
+        $push: {
+          friends: params.friendId
+        }
+      }, {
+        new: true
+      })
+      .then(dbUserData => {
+        if (!dbUserData) {
+          res.status(404).json({
+            message: 'No user found at this id!'
+          });
+          return;
+        }
+        res.json(dbUserData)
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  },
+
+// delete a friend
+  deleteFriend({params}, res) {
+    User.findOneAndRemove(
+      { userId: params.userId},
+      { new: true })
+      .then(dbUserData => {
+        if (!dbUserData) {
+          res.status(404).json({
+            message: 'No user found at this id!'
+          });
+          return;
+        }
+        res.json(dbUserData)
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  },
+
+
+
+
+
 }
